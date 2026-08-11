@@ -1,0 +1,174 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* Color system */
+  --color-obsidian: #04060c;
+  --color-void: #070a13;
+  --color-charcoal: #0c111c;
+  --color-graphite: #141a28;
+  --color-slate-deep: #1b2435;
+
+  /* Blues */
+  --color-midnight: #0a1530;
+  --color-royal: #1e3a8a;
+  --color-electric: #3b82f6;
+  --color-azure: #60a5fa;
+  --color-sky-glow: #7dd3fc;
+
+  /* Gold accent */
+  --color-gold: #c9a96a;
+  --color-gold-soft: #d4bc8a;
+
+  /* Text */
+  --color-white: #ffffff;
+  --color-soft-white: #e8edf5;
+  --color-light-gray: #9aa7bd;
+  --color-mid-gray: #5a6680;
+  --color-dim-gray: #2a3550;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: var(--color-obsidian);
+    color: var(--color-soft-white);
+    font-family: var(--font-sans);
+    overflow-x: clip;
+  }
+
+  ::selection {
+    background: rgba(59, 130, 246, 0.3);
+    color: #fff;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #04060c;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #1b2435, #0a1530);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #2a3550, #1e3a8a);
+  }
+
+  /* Focus states */
+  *:focus-visible {
+    outline: 2px solid var(--color-azure);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  /* Background 3D scenes must not intercept scroll/wheel/touch events */
+  .scene-bg,
+  .scene-bg canvas {
+    pointer-events: none !important;
+    touch-action: pan-y !important;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gold-line {
+    background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  }
+
+  .blue-glow {
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.15), 0 0 80px rgba(59, 130, 246, 0.05);
+  }
+
+  .premium-border {
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .glass {
+    background: rgba(12, 17, 28, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-strong {
+    background: rgba(7, 10, 19, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #ffffff 0%, #7dd3fc 60%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #d4bc8a 0%, #c9a96a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .radial-fade {
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(180deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes line-expand {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+.animate-float-slow { animation: float-slow 12s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

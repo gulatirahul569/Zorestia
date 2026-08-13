@@ -45,7 +45,7 @@ export function Introduction() {
           className="relative aspect-[4/3] w-full overflow-hidden rounded-lg lg:aspect-[3/4]"
         >
           <img
-            src="/public/about-office.jpg"
+            src="/about-office.jpg"
             alt="Zorestia office"
             className="h-full w-full object-cover"
           />

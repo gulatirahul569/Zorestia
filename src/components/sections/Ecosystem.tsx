@@ -24,7 +24,7 @@ export function Ecosystem() {
       {/* Background image */}
       <div className="absolute  inset-0 z-0 overflow-hidden">
         <img
-          src="/public/ecosystem1.jpg"
+          src="/ecosystem1.jpg"
           alt=""
           className="h-full w-full scale-110 object-cover"
         />

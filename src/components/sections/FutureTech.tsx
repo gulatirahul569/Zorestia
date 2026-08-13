@@ -19,7 +19,7 @@ export function FutureTech() {
     <section className="relative overflow-hidden bg-obsidian py-24 lg:py-32">
       {/* Background image */}
       <div className="absolute inset-0 z-0">
-        <img src="/public/future.jpg" alt="" className="h-full w-full object-cover" />
+        <img src="/future.jpg" alt="" className="h-full w-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/70 to-obsidian/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-obsidian via-transparent to-obsidian/40" />
       </div>

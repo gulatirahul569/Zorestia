@@ -22,7 +22,7 @@ export function Insights() {
     >
       <div className="absolute inset-0 z-0">
         <img
-          src="/public/insights-skyline.jpg"
+          src="/insights-skyline.jpg"
           alt=""
           className="h-full w-full object-cover"
         />

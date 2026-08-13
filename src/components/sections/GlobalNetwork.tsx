@@ -64,7 +64,7 @@ export function GlobalNetwork() {
             className="relative aspect-[4/3] w-full overflow-hidden rounded-lg"
           >
             <img
-              src="/public/world-map.jpg"
+              src="/world-map.jpg"
               alt="Global network map"
               className="h-full w-full object-cover opacity-60"
             />

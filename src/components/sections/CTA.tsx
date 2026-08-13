@@ -7,7 +7,7 @@ export function CTA() {
     <section className="relative overflow-hidden py-32 lg:py-40">
       <div className="absolute inset-0 z-0">
         <img
-          src="/public/cta-skyline.jpg"
+          src="/cta-skyline.jpg"
           alt=""
           className="h-full w-full object-cover"
         />

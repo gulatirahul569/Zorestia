@@ -40,7 +40,7 @@ export function Partners() {
             className="relative aspect-[4/3] w-full overflow-hidden rounded-lg"
           >
             <img
-              src="/public/partners-handshake.jpg"
+              src="/partners-handshake.jpg"
               alt="Team collaborating"
               className="h-full w-full object-cover"
             />

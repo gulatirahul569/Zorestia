@@ -8,7 +8,7 @@ export function Hero() {
     <section id="home" className="relative min-h-screen w-full overflow-hidden">
       {/* Background image */}
       <div className="absolute inset-0 z-0">
-        <img src="/public/hero-skyline.jpg" alt="" className="h-full w-full object-cover" />
+        <img src="/hero-skyline.jpg" alt="" className="h-full w-full object-cover" />
       </div>
 
       {/* Gradient overlays */}

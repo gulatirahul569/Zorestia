@@ -5,10 +5,12 @@ export function SectionHeading({
   eyebrow,
   title,
   className = '',
+  center = false,
 }: {
   eyebrow?: string;
   title: string;
   className?: string;
+  center?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
@@ -21,8 +23,8 @@ export function SectionHeading({
     <div ref={ref} className={className}>
       {eyebrow && (
         <motion.div
-          className="mb-6 flex items-center gap-4"
-          initial={{ opacity: 0, x: -20 }}
+          className={`mb-6 flex items-center gap-4 ${center ? 'justify-center' : ''}`}
+          initial={{ opacity: 0, x: center ? 0 : -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
@@ -30,13 +32,17 @@ export function SectionHeading({
           <span className="text-xs font-semibold uppercase tracking-[0.3em] text-gold/80">
             {eyebrow}
           </span>
-          <motion.div
-            className="h-px bg-gradient-to-r from-gold/40 to-transparent"
-            style={{ width: lineWidth }}
-          />
+          {!center && (
+            <motion.div
+              className="h-px bg-gradient-to-r from-gold/40 to-transparent"
+              style={{ width: lineWidth }}
+            />
+          )}
         </motion.div>
       )}
-      <h2 className="text-balance text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl md:text-6xl">
+      <h2
+        className={`text-balance text-4xl font-bold leading-[1.1] tracking-tight text-white sm:text-5xl md:text-6xl ${center ? 'text-center' : ''}`}
+      >
         {title}
       </h2>
     </div>

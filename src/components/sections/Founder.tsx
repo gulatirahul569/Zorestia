@@ -3,7 +3,7 @@ import { Reveal, RevealText } from '@/components/ui/Reveal';
 
 export function Founder() {
   return (
-    <section className="relative overflow-hidden py-32 lg:py-40">
+    <section className="relative overflow-hidden py-10 lg:py-20">
       <div className="pointer-events-none absolute -left-32 top-1/2 h-96 w-96 -translate-y-1/2 rounded-full bg-midnight/40 blur-[120px]" />
 
       <div className="relative mx-auto max-w-7xl px-6 lg:px-10">

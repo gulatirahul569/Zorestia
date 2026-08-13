@@ -1,181 +1,125 @@
-import { Suspense, lazy, useMemo, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { motion } from 'framer-motion';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Reveal } from '@/components/ui/Reveal';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { SecondaryButton } from '@/components/ui/Button';
 
-const Scene = lazy(() => import('@/components/three/Scene').then((m) => ({ default: m.Scene })));
+interface Node {
+  name: string;
+  x: number; // % from left
+  y: number; // % from top
+  color: 'blue' | 'red' | 'gold';
+}
 
-const REGIONS = [
-  { name: 'North America', lat: 40, lon: -100 },
-  { name: 'Europe', lat: 50, lon: 10 },
-  { name: 'Middle East', lat: 25, lon: 45 },
-  { name: 'Asia', lat: 35, lon: 100 },
+const NODES: Node[] = [
+  { name: 'North America', x: 20, y: 38, color: 'blue' },
+  { name: 'Europe', x: 48, y: 28, color: 'blue' },
+  { name: 'Middle East', x: 58, y: 42, color: 'red' },
+  { name: 'Africa', x: 52, y: 58, color: 'red' },
+  { name: 'South Asia', x: 68, y: 46, color: 'gold' },
+  { name: 'East Asia', x: 78, y: 34, color: 'red' },
 ];
 
-function latLonToVec3(lat: number, lon: number, r: number) {
-  const phi = (90 - lat) * (Math.PI / 180);
-  const theta = (lon + 180) * (Math.PI / 180);
-  return new THREE.Vector3(
-    -(r * Math.sin(phi) * Math.cos(theta)),
-    r * Math.cos(phi),
-    r * Math.sin(phi) * Math.sin(theta)
-  );
-}
+const CONNECTIONS: [number, number][] = [
+  [0, 1],
+  [1, 2],
+  [2, 3],
+  [1, 4],
+  [4, 5],
+  [2, 5],
+];
 
-function NetworkGlobe({ reducedMotion }: { reducedMotion: boolean }) {
-  const groupRef = useRef<THREE.Group>(null);
-
-  const nodes = useMemo(
-    () => REGIONS.map((r) => latLonToVec3(r.lat, r.lon, 1.5)),
-    []
-  );
-
-  const arcs = useMemo(() => {
-    const result: { points: Float32Array }[] = [];
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const start = nodes[i];
-        const end = nodes[j];
-        const mid = new THREE.Vector3()
-          .addVectors(start, end)
-          .multiplyScalar(0.5)
-          .normalize()
-          .multiplyScalar(2.2);
-        const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-        const pts = curve.getPoints(40);
-        result.push({ points: new Float32Array(pts.flatMap((p) => [p.x, p.y, p.z])) });
-      }
-    }
-    return result;
-  }, [nodes]);
-
-  const wireframe = useMemo(() => {
-    const geo = new THREE.SphereGeometry(1.5, 40, 28);
-    return new THREE.WireframeGeometry(geo);
-  }, []);
-
-  const particles = useMemo(() => {
-    const count = reducedMotion ? 100 : 300;
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      const r = 1.5 * (1.1 + Math.random() * 1.8);
-      const theta = Math.random() * Math.PI * 2;
-      const phi = Math.acos(2 * Math.random() - 1);
-      arr[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-      arr[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-      arr[i * 3 + 2] = r * Math.cos(phi);
-    }
-    return arr;
-  }, [reducedMotion]);
-
-  const particleRef = useRef<THREE.Points>(null);
-
-  useFrame((_, delta) => {
-    if (!groupRef.current) return;
-    if (!reducedMotion) groupRef.current.rotation.y += delta * 0.1;
-    if (particleRef.current && !reducedMotion) {
-      particleRef.current.rotation.y += delta * 0.03;
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      <mesh>
-        <sphereGeometry args={[1.49, 64, 48]} />
-        <meshBasicMaterial color="#040810" transparent opacity={0.85} />
-      </mesh>
-      <lineSegments geometry={wireframe}>
-        <lineBasicMaterial color="#1e3a8a" transparent opacity={0.2} />
-      </lineSegments>
-
-      {nodes.map((pos, i) => (
-        <group key={i} position={pos}>
-          <mesh>
-            <sphereGeometry args={[0.05, 12, 12]} />
-            <meshBasicMaterial color="#7dd3fc" />
-          </mesh>
-          <mesh>
-            <sphereGeometry args={[0.12, 12, 12]} />
-            <meshBasicMaterial color="#3b82f6" transparent opacity={0.15} />
-          </mesh>
-        </group>
-      ))}
-
-      {arcs.map((arc, i) => {
-        const geo = new THREE.BufferGeometry();
-        geo.setAttribute('position', new THREE.BufferAttribute(arc.points, 3));
-        return (
-          <primitive
-            key={i}
-            object={new THREE.Line(geo, new THREE.LineBasicMaterial({ color: '#3b82f6', transparent: true, opacity: 0.25 }))}
-          />
-        );
-      })}
-
-      <points ref={particleRef}>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[particles, 3]} />
-        </bufferGeometry>
-        <pointsMaterial size={0.02} color="#60a5fa" transparent opacity={0.5} sizeAttenuation depthWrite={false} />
-      </points>
-    </group>
-  );
-}
+const dotColor = {
+  blue: '#3b82f6',
+  red: '#ef4444',
+  gold: '#d4af37',
+};
 
 export function GlobalNetwork() {
-  const reduced = useReducedMotion();
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] });
-  const globeScale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
-  const globeRotate = useTransform(scrollYProgress, [0, 1], [0, 30]);
-
   return (
-    <section id="solutions" ref={ref} className="relative overflow-hidden py-32 lg:py-40">
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-midnight/10 to-transparent" />
-
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-10">
+    <section id="solutions" className="relative overflow-hidden bg-obsidian py-24 lg:py-32">
+      <div className="mx-auto max-w-7xl px-6 lg:px-10">
         <div className="grid items-center gap-16 lg:grid-cols-2 lg:gap-20">
           {/* Left — text */}
           <div>
-            <SectionHeading
-              eyebrow="Global Network"
-              title="Built for a world without borders."
-            />
+            <SectionHeading eyebrow="Global Perspective" title="Worldwide reach. Local insight." />
             <Reveal delay={0.2}>
-              <p className="mt-8 max-w-lg text-lg leading-relaxed text-light-gray">
-                Global opportunity requires global thinking. We connect markets,
-                technology, people and partnerships across continents to drive
-                sustainable growth.
+              <p className="mt-6 max-w-lg text-base leading-relaxed text-light-gray">
+                Our global network enables us to connect opportunities across
+                borders and deliver impact where it matters most.
               </p>
             </Reveal>
-
             <Reveal delay={0.4}>
-              <div className="mt-12 space-y-px overflow-hidden rounded-2xl border border-white/5">
-                {['Markets', 'Technology', 'People', 'Partnerships', 'Growth'].map((step, i) => (
-                  <div key={step} className="flex items-center gap-4 bg-white/[0.015] px-6 py-4">
-                    <span className="text-xs font-bold text-gold/60">0{i + 1}</span>
-                    <span className="text-sm font-semibold text-white">{step}</span>
-                    <span className="ml-auto h-1.5 w-1.5 rounded-full bg-azure/40" />
-                  </div>
-                ))}
+              <div className="mt-8">
+                <SecondaryButton href="#" variant="flat">Explore Markets</SecondaryButton>
               </div>
             </Reveal>
           </div>
 
-          {/* Right — 3D globe */}
+          {/* Right — flat map with animated nodes */}
           <motion.div
-            style={{ scale: globeScale, rotate: globeRotate }}
-            className="relative aspect-square w-full"
+            initial={{ opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-100px' }}
+            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+            className="relative aspect-[4/3] w-full overflow-hidden rounded-lg"
           >
-            <div className="absolute inset-0 rounded-full bg-electric/5 blur-[80px]" />
-            <Suspense fallback={null}>
-              <Scene cameraPosition={[0, 0, 4.5]} fov={45}>
-                <NetworkGlobe reducedMotion={reduced} />
-              </Scene>
-            </Suspense>
+            <img
+              src="/public/world-map.jpg"
+              alt="Global network map"
+              className="h-full w-full object-cover opacity-60"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-obsidian/40 via-transparent to-obsidian/20" />
+
+            <svg
+              className="absolute inset-0 h-full w-full"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+            >
+              {CONNECTIONS.map(([a, b], i) => (
+                <motion.line
+                  key={i}
+                  x1={NODES[a].x}
+                  y1={NODES[a].y}
+                  x2={NODES[b].x}
+                  y2={NODES[b].y}
+                  stroke="url(#lineGrad)"
+                  strokeWidth={0.15}
+                  initial={{ pathLength: 0, opacity: 0 }}
+                  whileInView={{ pathLength: 1, opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 1.2, delay: i * 0.15, ease: 'easeInOut' }}
+                />
+              ))}
+              <defs>
+                <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#d4af37" stopOpacity="0.6" />
+                </linearGradient>
+              </defs>
+            </svg>
+
+            {NODES.map((node, i) => (
+              <motion.div
+                key={node.name}
+                initial={{ opacity: 0, scale: 0 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="absolute -translate-x-1/2 -translate-y-1/2"
+                style={{ left: `${node.x}%`, top: `${node.y}%` }}
+              >
+                <span
+                  className="block h-2.5 w-2.5 rounded-full"
+                  style={{ backgroundColor: dotColor[node.color], boxShadow: `0 0 12px ${dotColor[node.color]}` }}
+                />
+                <motion.span
+                  className="absolute inset-0 rounded-full"
+                  style={{ backgroundColor: dotColor[node.color] }}
+                  animate={{ scale: [1, 2.2, 1], opacity: [0.5, 0, 0.5] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: i * 0.3 }}
+                />
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </div>

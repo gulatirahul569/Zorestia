@@ -34,11 +34,11 @@ export function Footer() {
               services.
             </p>
             <a
-              href="mailto:ceo@zorestia.com"
+              href="mailto:contactzorestia.com"
               className="mt-6 inline-flex items-center gap-2 text-sm text-light-gray transition-colors hover:text-azure"
             >
               <Mail size={16} />
-              ceo@zorestia.com
+              contactzorestia.com
             </a>
           </div>
 

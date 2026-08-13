@@ -20,7 +20,17 @@ export function Ecosystem() {
   const center = 280;
 
   return (
-    <section className="relative overflow-hidden py-32 lg:py-40">
+    <section className="relative overflow-hidden py-10 lg:py-20">
+      {/* Background image */}
+      <div className="absolute  inset-0 z-0 overflow-hidden">
+        <img
+          src="/public/ecosystem1.jpg"
+          alt=""
+          className="h-full w-full scale-110 object-cover"
+        />
+        {/* <div className="absolute inset-0 bg-obsidian/85" /> */}
+      </div>
+
       <div className="pointer-events-none absolute inset-0 grid-bg opacity-10" />
       <div className="pointer-events-none absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-electric/5 blur-[100px]" />
 
@@ -29,13 +39,13 @@ export function Ecosystem() {
           eyebrow="The Ecosystem"
           title="Everything connected. One ecosystem."
           className="mb-16 text-center"
+          center
         />
 
         <Reveal>
           <div className="flex justify-center">
             <div className="relative w-full max-w-[600px]">
               <svg viewBox="0 0 560 560" className="w-full" role="img" aria-label="Zorestia ecosystem diagram">
-                {/* Connection lines */}
                 {NODES.map((_, i) => {
                   const angle = (i / NODES.length) * Math.PI * 2 - Math.PI / 2;
                   const x = center + Math.cos(angle) * radius;
@@ -56,11 +66,9 @@ export function Ecosystem() {
                   );
                 })}
 
-                {/* Orbit rings */}
                 <circle cx={center} cy={center} r={radius} fill="none" stroke="#3b82f6" strokeWidth={0.3} opacity={0.15} strokeDasharray="2 4" />
                 <circle cx={center} cy={center} r={radius * 0.6} fill="none" stroke="#c9a96a" strokeWidth={0.3} opacity={0.1} strokeDasharray="2 4" />
 
-                {/* Center node */}
                 <g>
                   <circle cx={center} cy={center} r={48} fill="#04060c" stroke="#3b82f6" strokeWidth={1} opacity={0.9} />
                   <circle cx={center} cy={center} r={56} fill="none" stroke="#3b82f6" strokeWidth={0.5} opacity={0.3} className="animate-pulse-glow" />
@@ -74,7 +82,6 @@ export function Ecosystem() {
                   </text>
                 </g>
 
-                {/* Outer nodes */}
                 {NODES.map((node, i) => {
                   const angle = (i / NODES.length) * Math.PI * 2 - Math.PI / 2;
                   const x = center + Math.cos(angle) * radius;
@@ -90,7 +97,6 @@ export function Ecosystem() {
                       role="button"
                       aria-label={node.label}
                     >
-                      {/* Glow */}
                       <circle
                         cx={x}
                         cy={y}
@@ -101,14 +107,12 @@ export function Ecosystem() {
                         strokeWidth={isActive ? 1 : 0.5}
                         className="transition-all duration-500"
                       />
-                      {/* Label */}
                       <text
                         x={x}
                         y={y + 4}
                         textAnchor="middle"
-                        className={`text-[9px] font-semibold transition-all duration-300 ${
-                          isActive ? 'fill-azure' : 'fill-soft-white'
-                        }`}
+                        className={`text-[9px] font-semibold transition-all duration-300 ${isActive ? 'fill-azure' : 'fill-soft-white'
+                          }`}
                       >
                         {node.label.length > 14
                           ? node.label.substring(0, 12) + '...'
@@ -119,7 +123,6 @@ export function Ecosystem() {
                 })}
               </svg>
 
-              {/* Description panel */}
               <div className="mt-8 flex justify-center">
                 <AnimatePresence mode="wait">
                   {active !== null ? (

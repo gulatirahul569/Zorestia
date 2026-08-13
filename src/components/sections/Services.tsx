@@ -76,6 +76,7 @@ export function Services() {
           eyebrow="Business Capabilities"
           title="One partner. Multiple growth engines."
           className="mb-16 lg:mb-20"
+          center
         />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -121,11 +122,11 @@ function CapabilityCard({ capability }: { capability: Capability }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleLeave}
       style={{ rotateX: rotX, rotateY: rotY, transformPerspective: 800 }}
-      className="group relative h-full overflow-hidden rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-8 transition-all duration-500 hover:border-azure/20"
+      className="group relative h-full overflow-hidden border border-white/[0.06] bg-gradient-to-b from-white/[0.02] to-transparent p-8 transition-all duration-500 hover:border-azure/20"
     >
       {/* Glow on hover */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{
           background:
             'radial-gradient(400px circle at var(--mx) var(--my), rgba(59,130,246,0.08), transparent 40%)',
@@ -143,7 +144,7 @@ function CapabilityCard({ capability }: { capability: Capability }) {
         >
           {capability.number}
         </span>
-        <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-white/[0.02] transition-all duration-500 group-hover:border-azure/30 group-hover:bg-azure/5">
+        <div className="flex h-12 w-12 items-center justify-center border border-white/10 bg-white/[0.02] transition-all duration-500 group-hover:border-azure/30 group-hover:bg-azure/5">
           <Icon
             size={22}
             className="text-light-gray transition-all duration-500 group-hover:scale-110 group-hover:text-azure"

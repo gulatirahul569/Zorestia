@@ -1,25 +1,14 @@
-import { Suspense, lazy } from 'react';
 import { motion } from 'framer-motion';
 import { PrimaryButton, SecondaryButton } from '@/components/ui/Button';
-import { useReducedMotion } from '@/hooks/useReducedMotion';
-
-const Scene = lazy(() => import('@/components/three/Scene').then((m) => ({ default: m.Scene })));
-const Globe = lazy(() => import('@/components/three/Globe').then((m) => ({ default: m.Globe })));
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
 export function Hero() {
-  const reduced = useReducedMotion();
-
   return (
     <section id="home" className="relative min-h-screen w-full overflow-hidden">
-      {/* 3D Globe background */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <Suspense fallback={<GlobeFallback />}>
-          <Scene cameraPosition={[0, 0, 5.5]} fov={42} nonInteractive>
-            <Globe radius={2} reducedMotion={reduced} />
-          </Scene>
-        </Suspense>
+      {/* Background image */}
+      <div className="absolute inset-0 z-0">
+        <img src="/public/hero-skyline.jpg" alt="" className="h-full w-full object-cover" />
       </div>
 
       {/* Gradient overlays */}
@@ -47,7 +36,7 @@ export function Hero() {
 
         {/* Headline line 1 */}
         <motion.h1
-          initial={{ opacity: 0, y: 30, filter: reduced ? 'none' : 'blur(10px)' }}
+          initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 1.2, delay: 0.6, ease }}
           className="max-w-5xl text-5xl font-bold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-[5.5rem]"
@@ -59,7 +48,7 @@ export function Hero() {
 
         {/* Headline line 2 */}
         <motion.h2
-          initial={{ opacity: 0, y: 30, filter: reduced ? 'none' : 'blur(10px)' }}
+          initial={{ opacity: 0, y: 30, filter: 'blur(10px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 1.2, delay: 0.9, ease }}
           className="mt-2 max-w-4xl text-2xl font-medium leading-[1.2] tracking-tight text-gradient-blue sm:text-3xl md:text-4xl lg:text-[2.75rem]"
@@ -98,26 +87,16 @@ export function Hero() {
         className="absolute bottom-8 left-1/2 z-20 -translate-x-1/2"
       >
         <div className="flex flex-col items-center gap-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-mid-gray">
-            Scroll
-          </span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-mid-gray">Scroll</span>
           <div className="h-12 w-px bg-gradient-to-b from-white/20 to-transparent">
             <motion.div
               className="h-4 w-px bg-azure"
-              animate={reduced ? {} : { y: [0, 32, 0] }}
+              animate={{ y: [0, 32, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
             />
           </div>
         </div>
       </motion.div>
     </section>
-  );
-}
-
-function GlobeFallback() {
-  return (
-    <div className="flex h-full items-center justify-center">
-      <div className="h-64 w-64 animate-pulse rounded-full bg-gradient-to-b from-midnight/40 to-transparent blur-2xl" />
-    </div>
   );
 }
